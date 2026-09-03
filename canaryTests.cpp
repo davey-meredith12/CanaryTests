@@ -78,11 +78,76 @@ void reportFailure(string file, int line, string message = ""){
         auto stored_a = a; \
         auto stored_b = b; \
         if (stored_a != stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << endl; \
+            message << "   Actual: " << stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+        } \
+    } while (false);
+
+#define EXPECT_NE(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a == stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " != " << stored_b << endl; \
+            message << "   Actual: " << stored_b << " == " << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+        } \
+    } while (false);
+
+#define EXPECT_LT(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a >= stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " < " << stored_b << endl; \
+            message << "   Actual: " << stored_a << " >= " <<  stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+        } \
+    } while (false);
+
+#define EXPECT_LE(a, b) \
+do{ \
+    auto stored_a = a; \
+    auto stored_b = b; \
+    if(stored_a > stored_b){ \
         ostringstream message; \
-        message << "   Expected: " << stored_a << endl; \
-        message << "   Actual: " << stored_b << endl; \
+        message << "   Expected: " << stored_a << " <= " << stored_b << endl; \
+        message << "   Actual: " << stored_a << " > " <<  stored_b << endl; \
         reportFailure(__FILE__, __LINE__, message.str()); \
         currentTestPassed = false; \
+    } \
+} while (false);
+
+#define EXPECT_GT(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a <= stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " > " << stored_b << endl; \
+            message << "   Actual: " << stored_a << " <= " <<  stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+        } \
+    } while (false);
+
+#define EXPECT_GE(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a < stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " >= " << stored_b << endl; \
+            message << "   Actual: " << stored_a << " < " <<  stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
         } \
     } while (false);
 
