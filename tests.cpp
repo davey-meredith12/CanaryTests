@@ -1,22 +1,39 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::ostringstream;
+using std::vector;
 
+vector<void(*)()> tests;
+bool currentTestPassed = true;
 
+struct TestRegistration{
+    TestRegistration(void (*test)()){
+        tests.push_back(test);
+    }
+};
 
 void reportFailure(string file, int line, string message = ""){
     cout << "Test failed at " << file << ":" << line << endl;
     cout << message << endl;
 }
 
+#define MAKE_NAME(a, b) a ## b
+
+#define TEST(name) \
+    void name(); \
+    TestRegistration MAKE_NAME(registration, name)(name); \
+    void name()
+
 #define EXPECT_TRUE(condition) \
     do{ \
         if (!(condition)){ \
                 reportFailure(__FILE__, __LINE__); \
+                currentTestPassed = false; \
         }  \
     } while (false);
     
@@ -30,14 +47,39 @@ void reportFailure(string file, int line, string message = ""){
         message << "Expected: " << stored_a << endl; \
         message << "Actual: " << stored_b << endl; \
         reportFailure(__FILE__, __LINE__, message.str()); \
+        currentTestPassed = false; \
         } \
     } while (false);
-    
 
-    int main(){
-        EXPECT_TRUE(true);
-        EXPECT_TRUE(false);
-        EXPECT_EQ(10, 10);
-        EXPECT_EQ(10, 3);
-
+#define RUN_ALL_TESTS() \
+    for(auto test: tests) { \
+        currentTestPassed = true; \
+        test(); \
+        if (currentTestPassed){ \
+            cout << "Test Passed" << endl; \
+        } \
+        else { \
+            cout << "Test Failed" << endl; \
+        } \
     }
+
+TEST(FailTest){
+    EXPECT_TRUE(false);
+}
+
+TEST(PassTest){
+    EXPECT_TRUE(true);
+}
+
+TEST(FailCompareTest){
+    EXPECT_EQ(1, 2);
+}
+
+TEST(PassCompareTest){
+    EXPECT_EQ(1, 1);
+}
+
+
+int main(){
+    RUN_ALL_TESTS();
+}
