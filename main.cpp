@@ -1,4 +1,4 @@
-#include "tests.cpp"
+#include "canaryTests.cpp"
 
 TEST(ExpectTrue, FailTest){
     EXPECT_TRUE(false);
