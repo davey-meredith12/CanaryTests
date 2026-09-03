@@ -8,6 +8,10 @@ using std::string;
 using std::ostringstream;
 using std::vector;
 
+#define GREEN "\033[32m"
+#define RED   "\033[31m"
+#define RESET "\033[0m"
+
 struct TestInfo{
     string testSuite;
     string testName;
@@ -98,14 +102,14 @@ int RUN_ALL_TESTS(){
         }
 
         currentTestPassed = true;
-        cout << "\033[32m[ RUN       ] " << test.testSuite << "." << test.testName << "\033[0m" << endl;
+        cout << GREEN << "[ RUN       ] " << test.testSuite << "." << test.testName << RESET << endl;
         test.testFunction();
         if(currentTestPassed){
-            cout << "\033[32m[        OK ] " << test.testSuite << "." << test.testName << "\033[0m" << endl;
+            cout << GREEN << "[        OK ] " << test.testSuite << "." << test.testName << RESET << endl;
             testsPassed++;
         }
         else{
-            cout << "\033[31m[      FAIL ] " << test.testSuite << "." << test.testName << "\033[0m" << endl;
+            cout << RED << "[      FAIL ] " << test.testSuite << "." << test.testName << RESET << endl;
             allTestsPassed = false;
             testsFailed++;
         }
