@@ -28,14 +28,16 @@ void reportFailure(string file, int line, string message = ""){
     cout << message;
 }
 
-#define MAKE_NAME(a, b) a ## b
+#define CONCAT(a, b) a ## b
+
+#define MAKE_NAME(a, b) CONCAT(a, b)
 
 #define STRINGIFY(x) #x
 
 #define TEST(suite, name) \
-    void name(); \
-    TestRegistration MAKE_NAME(registration, name)(STRINGIFY(suite), STRINGIFY(name), name); \
-    void name()
+    void MAKE_NAME(suite, name)(); \
+    TestRegistration MAKE_NAME(MAKE_NAME(registration, suite), name)(STRINGIFY(suite), STRINGIFY(name), MAKE_NAME(suite, name)); \
+    void MAKE_NAME(suite, name)()
 
 #define EXPECT_TRUE(condition) \
     do{ \
@@ -44,7 +46,28 @@ void reportFailure(string file, int line, string message = ""){
                 currentTestPassed = false; \
         }  \
     } while (false);
-    
+
+#define EXPECT_FALSE(condition) \
+    do{ \
+        if (condition){ \
+                reportFailure(__FILE__, __LINE__); \
+                currentTestPassed = false; \
+        }  \
+    } while (false);
+
+#define EXPECT_NEAR(val1, val2, abs_error) \
+    do{ \
+        auto stored_val1 = val1; \
+        auto stored_val2 = val2; \
+        auto diff = stored_val1 - stored_val2; \
+        if(diff < 0){ \
+            diff = diff * -1; \
+        } \
+        if (diff > abs_error){ \
+            reportFailure(__FILE__, __LINE__); \
+            currentTestPassed = false; \
+        } \
+    } while (false);
 
 #define EXPECT_EQ(a, b) \
     do{ \
