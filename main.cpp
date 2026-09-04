@@ -76,6 +76,14 @@ TEST(GreaterThanOrEqual, PassTest){
     EXPECT_GE(1, 0);
 }
 
+TEST(AssertEqual, FailTest){
+    ASSERT_EQ(1, 2);
+    cout << "Shouldn't arrive" << endl;
+}
+
+TEST(AssertEqual, PassTest){
+    ASSERT_EQ(2, 2);
+}
 
 int main(){
     return RUN_ALL_TESTS();

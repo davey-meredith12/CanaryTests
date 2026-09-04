@@ -151,6 +151,123 @@ do{ \
         } \
     } while (false);
 
+#define ASSERT_TRUE(condition) \
+    do{ \
+        if (!(condition)){ \
+                reportFailure(__FILE__, __LINE__); \
+                currentTestPassed = false; \
+                return; \
+        }  \
+    } while (false);
+
+#define ASSERT_FALSE(condition) \
+    do{ \
+        if (condition){ \
+                reportFailure(__FILE__, __LINE__); \
+                currentTestPassed = false; \
+                false; \
+        }  \
+    } while (false);
+
+#define ASSERT_NEAR(val1, val2, abs_error) \
+    do{ \
+        auto stored_val1 = val1; \
+        auto stored_val2 = val2; \
+        auto diff = stored_val1 - stored_val2; \
+        if(diff < 0){ \
+            diff = diff * -1; \
+        } \
+        if (diff > abs_error){ \
+            reportFailure(__FILE__, __LINE__); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false);
+
+#define ASSERT_EQ(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if (stored_a != stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << endl; \
+            message << "   Actual: " << stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false);
+
+#define ASSERT_NE(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a == stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " != " << stored_b << endl; \
+            message << "   Actual: " << stored_b << " == " << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false);
+
+#define ASSERT_LT(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a >= stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " < " << stored_b << endl; \
+            message << "   Actual: " << stored_a << " >= " <<  stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false);
+
+#define ASSERT_LE(a, b) \
+do{ \
+    auto stored_a = a; \
+    auto stored_b = b; \
+    if(stored_a > stored_b){ \
+        ostringstream message; \
+        message << "   Expected: " << stored_a << " <= " << stored_b << endl; \
+        message << "   Actual: " << stored_a << " > " <<  stored_b << endl; \
+        reportFailure(__FILE__, __LINE__, message.str()); \
+        currentTestPassed = false; \
+        return; \
+    } \
+} while (false);
+
+#define ASSERT_GT(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a <= stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " > " << stored_b << endl; \
+            message << "   Actual: " << stored_a << " <= " <<  stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false);
+
+#define ASSERT_GE(a, b) \
+    do{ \
+        auto stored_a = a; \
+        auto stored_b = b; \
+        if(stored_a < stored_b){ \
+            ostringstream message; \
+            message << "   Expected: " << stored_a << " >= " << stored_b << endl; \
+            message << "   Actual: " << stored_a << " < " <<  stored_b << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false);
+
 int RUN_ALL_TESTS(){
     bool allTestsPassed = true;
     int testsPassed = 0;
