@@ -54,7 +54,7 @@ TEST(LessThanOrEqual, FailTest){
 }
 
 TEST(LessThanOrEqual, PassTest){
-    EXPECT_LE(1, 1)
+    EXPECT_LE(1, 1);
     EXPECT_LE(1, 2);
 }
 

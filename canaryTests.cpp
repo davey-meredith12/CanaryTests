@@ -43,13 +43,24 @@ void reportFailure(string file, int line, string message = ""){
     TestRegistration MAKE_NAME(MAKE_NAME(registration, suite), name)(STRINGIFY(suite), STRINGIFY(name), MAKE_NAME(suite, name)); \
     void MAKE_NAME(suite, name)()
 
+#define FAIL() \
+    do{ \
+        reportFailure(__FILE__, __LINE__); \
+        currentTestPassed = false; \
+        return; \
+    } while (false)
+
+#define SUCCEED() \
+    do{ \
+    } while (false)
+
 #define EXPECT_TRUE(condition) \
     do{ \
         if (!(condition)){ \
                 reportFailure(__FILE__, __LINE__); \
                 currentTestPassed = false; \
         }  \
-    } while (false);
+    } while (false)
 
 #define EXPECT_FALSE(condition) \
     do{ \
@@ -57,7 +68,7 @@ void reportFailure(string file, int line, string message = ""){
                 reportFailure(__FILE__, __LINE__); \
                 currentTestPassed = false; \
         }  \
-    } while (false);
+    } while (false)
 
 #define EXPECT_NEAR(val1, val2, abs_error) \
     do{ \
@@ -71,7 +82,7 @@ void reportFailure(string file, int line, string message = ""){
             reportFailure(__FILE__, __LINE__); \
             currentTestPassed = false; \
         } \
-    } while (false);
+    } while (false)
 
 #define EXPECT_EQ(a, b) \
     do{ \
@@ -84,7 +95,7 @@ void reportFailure(string file, int line, string message = ""){
             reportFailure(__FILE__, __LINE__, message.str()); \
             currentTestPassed = false; \
         } \
-    } while (false);
+    } while (false)
 
 #define EXPECT_NE(a, b) \
     do{ \
@@ -97,7 +108,7 @@ void reportFailure(string file, int line, string message = ""){
             reportFailure(__FILE__, __LINE__, message.str()); \
             currentTestPassed = false; \
         } \
-    } while (false);
+    } while (false)
 
 #define EXPECT_LT(a, b) \
     do{ \
@@ -110,7 +121,7 @@ void reportFailure(string file, int line, string message = ""){
             reportFailure(__FILE__, __LINE__, message.str()); \
             currentTestPassed = false; \
         } \
-    } while (false);
+    } while (false)
 
 #define EXPECT_LE(a, b) \
 do{ \
@@ -123,7 +134,7 @@ do{ \
         reportFailure(__FILE__, __LINE__, message.str()); \
         currentTestPassed = false; \
     } \
-} while (false);
+} while (false)
 
 #define EXPECT_GT(a, b) \
     do{ \
@@ -136,7 +147,7 @@ do{ \
             reportFailure(__FILE__, __LINE__, message.str()); \
             currentTestPassed = false; \
         } \
-    } while (false);
+    } while (false)
 
 #define EXPECT_GE(a, b) \
     do{ \
@@ -149,7 +160,7 @@ do{ \
             reportFailure(__FILE__, __LINE__, message.str()); \
             currentTestPassed = false; \
         } \
-    } while (false);
+    } while (false)
 
 #define ASSERT_TRUE(condition) \
     do{ \
@@ -158,16 +169,16 @@ do{ \
                 currentTestPassed = false; \
                 return; \
         }  \
-    } while (false);
+    } while (false)
 
 #define ASSERT_FALSE(condition) \
     do{ \
         if (condition){ \
                 reportFailure(__FILE__, __LINE__); \
                 currentTestPassed = false; \
-                false; \
+                return; \
         }  \
-    } while (false);
+    } while (false)
 
 #define ASSERT_NEAR(val1, val2, abs_error) \
     do{ \
@@ -182,7 +193,7 @@ do{ \
             currentTestPassed = false; \
             return; \
         } \
-    } while (false);
+    } while (false)
 
 #define ASSERT_EQ(a, b) \
     do{ \
@@ -196,7 +207,7 @@ do{ \
             currentTestPassed = false; \
             return; \
         } \
-    } while (false);
+    } while (false)
 
 #define ASSERT_NE(a, b) \
     do{ \
@@ -210,7 +221,7 @@ do{ \
             currentTestPassed = false; \
             return; \
         } \
-    } while (false);
+    } while (false)
 
 #define ASSERT_LT(a, b) \
     do{ \
@@ -224,7 +235,7 @@ do{ \
             currentTestPassed = false; \
             return; \
         } \
-    } while (false);
+    } while (false)
 
 #define ASSERT_LE(a, b) \
 do{ \
@@ -238,7 +249,7 @@ do{ \
         currentTestPassed = false; \
         return; \
     } \
-} while (false);
+} while (false)
 
 #define ASSERT_GT(a, b) \
     do{ \
@@ -252,7 +263,7 @@ do{ \
             currentTestPassed = false; \
             return; \
         } \
-    } while (false);
+    } while (false)
 
 #define ASSERT_GE(a, b) \
     do{ \
@@ -266,7 +277,7 @@ do{ \
             currentTestPassed = false; \
             return; \
         } \
-    } while (false);
+    } while (false)
 
 int RUN_ALL_TESTS(){
     bool allTestsPassed = true;
