@@ -18,6 +18,12 @@ struct TestInfo{
     void (*testFunction)();
 };
 
+struct Test{
+    virtual void SetUp(){}
+    virtual void TearDown(){}
+    virtual ~Test(){}
+};
+
 vector<TestInfo> tests;
 bool currentTestPassed = true;
 
@@ -32,6 +38,10 @@ void reportFailure(string file, int line, string message = ""){
     cout << message;
 }
 
+void reportSuccess(string file, int line){
+    cout << "   Success at " << file << ":" << line << endl;
+}
+
 #define CONCAT(a, b) a ## b
 
 #define MAKE_NAME(a, b) CONCAT(a, b)
@@ -43,6 +53,21 @@ void reportFailure(string file, int line, string message = ""){
     TestRegistration MAKE_NAME(MAKE_NAME(registration, suite), name)(STRINGIFY(suite), STRINGIFY(name), MAKE_NAME(suite, name)); \
     void MAKE_NAME(suite, name)()
 
+#define TEST_F(fixture, name) \
+    struct MAKE_NAME(fixture, name) : public fixture{ \
+        void TestBody(); \
+    }; \
+    TestRegistration MAKE_NAME(MAKE_NAME(registration, fixture), name) \
+        (STRINGIFY(fixture), STRINGIFY(name), []{ \
+            MAKE_NAME(fixture, name) testInstance; \
+            testInstance.SetUp(); \
+            if(currentTestPassed){ \
+                testInstance.TestBody(); \
+            } \
+            testInstance.TearDown(); \
+    }); \
+    void MAKE_NAME(fixture, name)::TestBody()
+
 #define FAIL() \
     do{ \
         reportFailure(__FILE__, __LINE__); \
@@ -52,6 +77,7 @@ void reportFailure(string file, int line, string message = ""){
 
 #define SUCCEED() \
     do{ \
+        reportSuccess(__FILE__, __LINE__); \
     } while (false)
 
 #define EXPECT_TRUE(condition) \
