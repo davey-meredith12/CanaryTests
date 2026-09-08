@@ -109,3 +109,11 @@ Currently supported assertions
 | `ASSERT_GT(a, b)` | Asserts `a` to be greater than `b` |
 | `ASSERT_GE(a, b)` | Asserts `a` to be greater than or equal to `b` |
 | `ASSERT_NEAR(a, b, error)` | Asserts two values to be within a specified absolute error (signed only)|
+
+## Exception Assertions
+| Assertion | Description |
+| --- | --- |
+| `EXPECT_THROW(statement, exception_type)` | Expects a statement to throw an exception of type `exception_type` |
+| `EXPECT_ANY_THROW(statement)` | Expects statement to throw any exception |
+
+An unhandled exception during a test will fail that test and not terminate the testing suite.

@@ -42,6 +42,11 @@ void reportSuccess(string file, int line){
     cout << "   Success at " << file << ":" << line << endl;
 }
 
+void reportException(string message = ""){
+    cout << "   Exception thrown" << endl;
+    cout << message;
+}
+
 #define CONCAT(a, b) a ## b
 
 #define MAKE_NAME(a, b) CONCAT(a, b)
@@ -305,6 +310,50 @@ do{ \
         } \
     } while (false)
 
+#define EXPECT_THROW(statement, exceptionType) \
+    do{ \
+        bool exceptionCaught = false; \
+        bool wrongType = false; \
+        try{ \
+            statement; \
+        } \
+        catch(const exceptionType& e){ \
+            exceptionCaught = true; \
+        } \
+        catch(...){ \
+            wrongType = true; \
+        } \
+        if(wrongType){ \
+            ostringstream message; \
+            message << "   Expected exception of type: " << STRINGIFY(exceptionType) << endl; \
+            message << "   Actual: a different exception was thrown" << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+        } \
+        else if(!exceptionCaught){ \
+            ostringstream message; \
+            message << "   Expected exception of type: " << STRINGIFY(exceptionType) << endl; \
+            message << "   Actual: no exception thrown" << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+        } \
+    } while (false)
+
+#define EXPECT_ANY_THROW(statement) \
+    do{ \
+        bool exceptionCaught = false; \
+        try{ \
+            statement; \
+        } \
+        catch(...){ \
+            exceptionCaught = true; \
+        } \
+        if(!exceptionCaught){ \
+            reportFailure(__FILE__, __LINE__, "   No exception thrown"); \
+            currentTestPassed = false; \
+        } \
+    } while (false)
+
 int RUN_ALL_TESTS(){
     bool allTestsPassed = true;
     int testsPassed = 0;
@@ -322,7 +371,19 @@ int RUN_ALL_TESTS(){
 
         currentTestPassed = true;
         cout << GREEN << "[ RUN       ] " << test.testSuite << "." << test.testName << RESET << endl;
-        test.testFunction();
+        try{
+            test.testFunction();
+        }
+        catch(const std::exception& e){
+            ostringstream message;
+            message << "   Unhandled exception: " << e.what() << endl;
+            reportException(message.str());
+            currentTestPassed = false;
+        }
+        catch(...){
+            reportException("   Unhandled exception of unknown type");
+            currentTestPassed = false;
+        }
         if(currentTestPassed){
             cout << GREEN << "[        OK ] " << test.testSuite << "." << test.testName << RESET << endl;
             testsPassed++;
