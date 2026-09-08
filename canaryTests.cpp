@@ -349,7 +349,9 @@ do{ \
             exceptionCaught = true; \
         } \
         if(!exceptionCaught){ \
-            reportFailure(__FILE__, __LINE__, "   No exception thrown"); \
+            ostringstream message; \
+            message << "   No exception thrown" << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
             currentTestPassed = false; \
         } \
     } while (false)
@@ -395,7 +397,9 @@ do{ \
             exceptionCaught = true; \
         } \
         if(!exceptionCaught){ \
-            reportFailure(__FILE__, __LINE__, "   No exception thrown"); \
+            ostringstream message; \
+            message << "   No exception thrown" << endl; \
+            reportFailure(__FILE__, __LINE__, message.str); \
             currentTestPassed = false; \
             return; \
         } \
