@@ -1,16 +1,27 @@
 #include "canaryTests.cpp"
 #include <stdexcept>
 
-
-TEST(HandlingException, ThrowFailsNoCrash){
+TEST(Fail, ThrowFailsNoCrash){
     throw std::runtime_error("Correctly handled if failed test");
 }
 
-TEST(HandlingException, ExpectThrow){
+TEST(Fail, ExpectThrowWrongType){
+    EXPECT_THROW(throw std::runtime_error("Test exception"), std::logic_error);
+}
+
+TEST(Fail, ExpectThrowNoThrow){
+    EXPECT_THROW({int i = 5;}, std::exception);
+}
+
+TEST(Fail, ExpectAnyThrowNoThrow){
+    EXPECT_ANY_THROW({int i = 5;});
+}
+
+TEST(Pass, ExpectThrowCorrectType){
     EXPECT_THROW(throw std::runtime_error("Test exception"), std::runtime_error);
 }
 
-TEST(HandlingException, ExpectAnyThrow){
+TEST(Pass, ExpectAnyThrow){
     EXPECT_ANY_THROW(throw std::runtime_error("error"));
 }
 

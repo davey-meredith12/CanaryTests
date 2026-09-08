@@ -354,6 +354,53 @@ do{ \
         } \
     } while (false)
 
+#define ASSERT_THROW(statement, exceptionType) \
+    do{ \
+        bool exceptionCaught = false; \
+        bool wrongType = false; \
+        try{ \
+            statement; \
+        } \
+        catch(const exceptionType& e){ \
+            exceptionCaught = true; \
+        } \
+        catch(...){ \
+            wrongType = true; \
+        } \
+        if(wrongType){ \
+            ostringstream message; \
+            message << "   Expected exception of type: " << STRINGIFY(exceptionType) << endl; \
+            message << "   Actual: a different exception was thrown" << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+        else if(!exceptionCaught){ \
+            ostringstream message; \
+            message << "   Expected exception of type: " << STRINGIFY(exceptionType) << endl; \
+            message << "   Actual: no exception thrown" << endl; \
+            reportFailure(__FILE__, __LINE__, message.str()); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false)
+
+#define ASSERT_ANY_THROW(statement) \
+    do{ \
+        bool exceptionCaught = false; \
+        try{ \
+            statement; \
+        } \
+        catch(...){ \
+            exceptionCaught = true; \
+        } \
+        if(!exceptionCaught){ \
+            reportFailure(__FILE__, __LINE__, "   No exception thrown"); \
+            currentTestPassed = false; \
+            return; \
+        } \
+    } while (false)
+
 int RUN_ALL_TESTS(){
     bool allTestsPassed = true;
     int testsPassed = 0;
